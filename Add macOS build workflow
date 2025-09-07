@@ -1,0 +1,30 @@
+.github/workflows
+build-macos.yml
+name: Build macOS App (Nativefier)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Nativefier
+        run: npm install -g nativefier
+
+      - name: Build app
+        run: nativefier "https://getstocklyapp.com" --name "GetStocklyApp" --icon "./icons/GetStocklyApp.icns" --platform "mac"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: GetStocklyApp-mac
+          path: ./*.dmg
